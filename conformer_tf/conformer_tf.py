@@ -37,3 +37,14 @@ class Scale(tf.keras.layers.Layer):
     
     def call(self, inputs, **kwargs):
         return self.fn(inputs, **kwargs) * self.scale
+
+class PreNorm(tf.keras.layers.Layer):
+    def __init__(self, dim, fn, **kwargs):
+        super(PreNorm, self).__init__(**kwargs)
+        self.norm = tf.keras.layers.LayerNormalization(axis=-1)
+        self.fn = fn
+    
+    def call(self, inputs, **kwargs):
+        inputs = self.norm(inputs)
+        return self.fn(inputs, **kwargs)
+
