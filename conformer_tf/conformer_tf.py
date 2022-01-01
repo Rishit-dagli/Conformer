@@ -15,5 +15,18 @@ class GLU(tf.keras.layers.Layer):
     def call(self, inputs):
         out, gate = tf.split(inputs, 2, axis=self.dim)
 
+class DepthwiseLayer(tf.keras.layers.Layer):
+    def __init__(self, chan_in, chan_out, kernel_size, padding, **kwargs):
+        super(DepthwiseLayer, self).__init__(**kwargs)
+        self.padding = padding
+        self.conv = tf.keras.layers.Conv1D(chan_in, chan_out, kernel_size, groups = chan_in)
+    
+    def call(self, inputs):
+        pad_list = []
+        for _ in range(inputs.shape.rank - 1):
+            pad_list.append([0, 0])
+        pad_list.append(list(self.padding))
+        inputs = tf.pad(inputs, pad_list)
+        return self.conv(inputs)
 
 
