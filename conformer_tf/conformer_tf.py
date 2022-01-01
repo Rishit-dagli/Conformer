@@ -29,4 +29,11 @@ class DepthwiseLayer(tf.keras.layers.Layer):
         inputs = tf.pad(inputs, pad_list)
         return self.conv(inputs)
 
-
+class Scale(tf.keras.layers.Layer):
+    def __init__(self, scale, fn, **kwargs):
+        super(Scale, self).__init__(**kwargs)
+        self.scale = scale
+        self.fn = fn
+    
+    def call(self, inputs, **kwargs):
+        return self.fn(inputs, **kwargs) * self.scale
