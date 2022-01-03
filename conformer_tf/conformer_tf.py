@@ -25,16 +25,16 @@ class DepthwiseLayer(tf.keras.layers.Layer):
     def __init__(self, chan_in, chan_out, kernel_size, padding, **kwargs):
         super(DepthwiseLayer, self).__init__(**kwargs)
         self.padding = padding
+        self.chan_in = chan_in
         self.conv = tf.keras.layers.Conv1D(
-            chan_in, chan_out, kernel_size, groups=chan_in
+            chan_out, 1, groups=chan_in
         )
 
     def call(self, inputs):
-        pad_list = []
-        for _ in range(inputs.shape.rank - 1):
-            pad_list.append([0, 0])
-        pad_list.append(list(self.padding))
-        inputs = tf.pad(inputs, pad_list)
+        inputs = tf.reshape(inputs, [-1])
+        padded = tf.zeros([self.chan_in * self.chan_in] - tf.shape(inputs), dtype=inputs.dtype)
+        inputs = tf.concat([inputs, padded], 0)
+        inputs = tf.reshape(inputs, [-1, self.chan_in, self.chan_in])
 
         return self.conv(inputs)
 
