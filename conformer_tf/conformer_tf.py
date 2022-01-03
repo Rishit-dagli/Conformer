@@ -140,3 +140,20 @@ class FeedForward(tf.keras.layers.Layer):
     def call(self, inputs):
         return self.net(inputs)
 
+class BatchNorm(tf.keras.layers.Layer):
+    def __init__(self, causal, **kwargs):
+        super(BatchNorm, self).__init__(**kwargs)
+        self.causal = causal
+    def call(self, inputs):
+      if not self.causal:
+         return tf.keras.layers.BatchNormalization(axis=-1)(inputs)
+      return tf.identity(inputs)
+
+class ConformerConvModule(tf.keras.layers.Layer):
+    def __init__(self,
+        dim,
+        causal = False,
+        expansion_factor = 2,
+        kernel_size = 31,
+        dropout = 0., **kwargs):
+        super(ConformerConvModule, self).__init__(**kwargs)
