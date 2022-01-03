@@ -178,3 +178,37 @@ class ConformerConvModule(tf.keras.layers.Layer):
 
     def call(self, inputs):
         return self.net(inputs)
+
+class ConformerBlock(tf.keras.layers.Layer):
+    def __init__(
+        self,
+        dim,
+        dim_head = 64,
+        heads = 8,
+        ff_mult = 4,
+        conv_expansion_factor = 2,
+        conv_kernel_size = 31,
+        attn_dropout = 0.,
+        ff_dropout = 0.,
+        conv_dropout = 0.,
+        **kwargs
+    ):
+        super(ConformerBlock, self).__init__(**kwargs)
+        self.ff1 = FeedForward(dim = dim, mult = ff_mult, dropout = ff_dropout)
+        self.attn = Attention(dim = dim, dim_head = dim_head, heads = heads, dropout = attn_dropout)
+        self.conv = ConformerConvModule(dim = dim, causal = False, expansion_factor = conv_expansion_factor, kernel_size = conv_kernel_size, dropout = conv_dropout)
+        self.ff2 = FeedForward(dim = dim, mult = ff_mult, dropout = ff_dropout)
+
+        self.attn = PreNorm(dim, self.attn)
+        self.ff1 = Scale(0.5, PreNorm(dim, self.ff1))
+        self.ff2 = Scale(0.5, PreNorm(dim, self.ff2))
+
+        self.post_norm = tf.keras.layers.LayerNormalization(axis=-1)
+
+    def forward(self, inputs, mask = None):
+        inputs = self.ff1(inputs) + inputs
+        inputs = self.attn(x, mask = mask) + inputs
+        inputs = self.conv(x) + inputs
+        inputs = self.ff2(x) + inputs
+        inputs = self.post_norm(inputs)
+        return x
