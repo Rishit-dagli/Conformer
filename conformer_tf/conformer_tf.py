@@ -1,7 +1,7 @@
 import tensorflow as tf
 import einops
 from einops import rearrange
-
+from einops.layers.tensorflow import Rearrange
 
 class Swish(tf.keras.layers.Layer):
     def __init__(self, **kwargs):
@@ -157,3 +157,24 @@ class ConformerConvModule(tf.keras.layers.Layer):
         kernel_size = 31,
         dropout = 0., **kwargs):
         super(ConformerConvModule, self).__init__(**kwargs)
+
+        inner_dim = dim * expansion_factor
+        if not causal:
+            padding = (kernel_size // 2, kernel_size // 2 - (kernel_size + 1) % 2)
+        else:
+            padding = (kernel_size - 1, 0)
+        
+        self.net = tf.keras.Sequential([
+            tf.keras.layers.LayerNormalization(axis=-1),
+            Rearrange('b n c -> b c n'),
+            tf.keras.layers.Conv1D(filters=inner_dim * 2, kernel_size=1),
+            GLU(dim=1),
+            DepthwiseLayer(inner_dim, inner_dim, kernel_size = kernel_size, padding = padding),
+            BatchNorm(causal = causal),
+            Swish(),
+            tf.keras.layers.Conv1D(filters= dim, kernel_size=1),
+            tf.keras.layers.Dropout(dropout),
+        ])
+
+    def call(self, inputs):
+        return self.net(inputs)
