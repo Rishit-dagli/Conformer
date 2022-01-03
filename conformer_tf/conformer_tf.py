@@ -88,7 +88,7 @@ class Attention(tf.keras.layers.Layer):
         else:
             has_context = True
 
-        q, k, v = tf.split((self.to_q(x), *self.to_kv(context)), 2, axis=-1)
+        q, k, v = tf.split((self.to_q(inputs), *self.to_kv(context)), 2, axis=-1)
         q, k, v = map(lambda t: rearrange(t, "b n (h d) -> b h n d", h=h), (q, k, v))
         dots = tf.einsum("b h i d, b h j d -> b h i j", q, k) * self.scale
 
@@ -106,13 +106,13 @@ class Attention(tf.keras.layers.Layer):
 
         if mask is not None or context_mask is not None:
             if mask is not None:
-                mask = torch.ones(*inputs.shape[:2])
+                mask = tf.ones(*inputs.shape[:2])
             if not has_context:
                 if context_mask is None:
                     context_mask = mask
             else:
                 if context_mask is None:
-                    context_mask = torch.ones(*context.shape[:2])
+                    context_mask = tf.ones(*context.shape[:2])
             mask_value = -tf.experimental.numpy.finfo(dots.dtype).max
             mask = rearrange(mask, "b i -> b () i ()") * rearrange(
                 context_mask, "b j -> b () () j"
@@ -207,8 +207,8 @@ class ConformerBlock(tf.keras.layers.Layer):
 
     def forward(self, inputs, mask = None):
         inputs = self.ff1(inputs) + inputs
-        inputs = self.attn(x, mask = mask) + inputs
-        inputs = self.conv(x) + inputs
-        inputs = self.ff2(x) + inputs
+        inputs = self.attn(inputs, mask = mask) + inputs
+        inputs = self.conv(inputs) + inputs
+        inputs = self.ff2(inputs) + inputs
         inputs = self.post_norm(inputs)
-        return x
+        return inputs
