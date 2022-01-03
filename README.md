@@ -2,7 +2,7 @@
 
 ![PyPI](https://img.shields.io/pypi/v/conformer-tf)
 [![Lint Code Base](https://github.com/Rishit-dagli/Conformer/actions/workflows/linter.yml/badge.svg)](https://github.com/Rishit-dagli/Conformer/actions/workflows/linter.yml)
-[![Upload Python Package](https://github.com/Rishit-dagli/Conformer/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Rishit-dagli/Conformer/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/Rishit-dagli/Conformer/actions/workflows/python-publish.yml/badge.svg?branch=v0.1.0)](https://github.com/Rishit-dagli/Conformer/actions/workflows/python-publish.yml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Rishit-dagli/Conformer/blob/main/example/conformer-example.ipynb)
 
