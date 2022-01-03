@@ -64,7 +64,7 @@ class Attention(tf.keras.layers.Layer):
     def __init__(
         self, dim, heads=8, dim_head=64, dropout=0.0, max_pos_emb=512, **kwargs
     ):
-        super(Attention).__init__(**kwargs)
+        super(Attention, self).__init__(**kwargs)
         inner_dim = dim_head * heads
         self.heads = heads
         self.scale = dim_head ** -0.5
