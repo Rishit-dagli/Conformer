@@ -120,7 +120,22 @@ class Attention(tf.keras.layers.Layer):
 
         attn = tf.nn.softmax(dots, axis=-1)
 
-        out = tf.einsum('b h i j, b h j d -> b h i d', attn, v)
-        out = rearrange(out, 'b h n d -> b n (h d)')
+        out = tf.einsum("b h i j, b h j d -> b h i d", attn, v)
+        out = rearrange(out, "b h n d -> b n (h d)")
         out = self.to_out(out)
         return self.dropout(out)
+
+
+class FeedForward(tf.keras.layers.Layer):
+    def __init__(self, dim, mult=4, dropout=0.0, **kwargs):
+        super(FeedForward, self).__init__(**kwargs)
+        self.net = tf.keras.Sequential([
+            tf.keras.layers.Dense(dim * mult, activation=Swish(), input_dim=dim),
+            tf.keras.layers.Dropout(dropout),
+            tf.keras.layers.Dense(dim, input_dim=dim * mult),
+            tf.keras.layers.Dropout(dropout),
+        ])
+
+    def call(self, inputs):
+        return self.net(inputs)
+
