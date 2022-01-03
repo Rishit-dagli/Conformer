@@ -1,3 +1,2 @@
-from .conformer_tf import ConformerConvModule
-from .conformer_tf import ConformerBlock
+from .conformer_tf import ConformerBlock, ConformerConvModule
 from .version import __version__

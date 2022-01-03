@@ -1,7 +1,9 @@
-import tensorflow as tf
 import einops
+import tensorflow as tf
 from einops import rearrange
 from einops.layers.tensorflow import Rearrange
+
+
 class Attention(tf.keras.layers.Layer):
     def __init__(
         self, dim, heads=8, dim_head=64, dropout=0.0, max_pos_emb=512, **kwargs
