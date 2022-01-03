@@ -12,7 +12,7 @@ class Swish(tf.keras.layers.Layer):
 
 
 class GLU(tf.keras.layers.Layer):
-    def __init__(self, diim, **kwargs):
+    def __init__(self, dim, **kwargs):
         super(GLU, self).__init__(**kwargs)
         self.dim = dim
 
