@@ -18,6 +18,7 @@ class GLU(tf.keras.layers.Layer):
 
     def call(self, inputs):
         out, gate = tf.split(inputs, 2, axis=self.dim)
+        return out * tf.sigmoid(gate)
 
 
 class DepthwiseLayer(tf.keras.layers.Layer):
