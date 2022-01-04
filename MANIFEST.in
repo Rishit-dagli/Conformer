@@ -1,2 +1,2 @@
 include LICENSE
-recursive-include fast_transformer *.py
+recursive-include conformer_tf *.py
