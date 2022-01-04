@@ -6,7 +6,6 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Rishit-dagli/Conformer/blob/main/example/conformer-example.ipynb)
 
-![GitHub License](https://img.shields.io/github/license/Rishit-dagli/Conformer)
 [![GitHub stars](https://img.shields.io/github/stars/Rishit-dagli/Conformer?style=social)](https://github.com/Rishit-dagli/Conformer/stargazers)
 [![GitHub followers](https://img.shields.io/github/followers/Rishit-dagli?label=Follow&style=social)](https://github.com/Rishit-dagli)
 [![Twitter Follow](https://img.shields.io/twitter/follow/rishit_dagli?style=social)](https://twitter.com/intent/follow?screen_name=rishit_dagli)
