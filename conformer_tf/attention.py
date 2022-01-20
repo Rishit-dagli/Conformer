@@ -13,9 +13,9 @@ class Attention(tf.keras.layers.Layer):
         self.heads = heads
         self.scale = dim_head ** -0.5
 
-        self.to_q = tf.keras.layers.Dense(inner_dim, input_dim=dim, use_bias=False)
-        self.to_kv = tf.keras.layers.Dense(inner_dim * 2, input_dim=dim, use_bias=False)
-        self.to_out = tf.keras.layers.Dense(dim, input_dim=inner_dim)
+        self.to_q = tf.keras.layers.Dense(inner_dim, use_bias=False)
+        self.to_kv = tf.keras.layers.Dense(inner_dim * 2, use_bias=False)
+        self.to_out = tf.keras.layers.Dense(dim)
 
         self.max_pos_emb = max_pos_emb
         self.rel_pos_emb = tf.keras.layers.Embedding(2 * max_pos_emb + 1, dim_head)
@@ -32,8 +32,12 @@ class Attention(tf.keras.layers.Layer):
         else:
             has_context = True
 
-        q, k, v = tf.split((self.to_q(inputs), *self.to_kv(context)), 2, axis=-1)
-        q, k, v = map(lambda t: rearrange(t, "b n (h d) -> b h n d", h=h), (q, k, v))
+        kv = tf.split(self.to_kv(context), num_or_size_splits=2, axis=-1)
+        q, k, v = (self.to_q(inputs), *kv)
+
+        q, k, v = map(
+            lambda t: rearrange(t, "b n (h d) -> b h n d", h=heads), (q, k, v)
+        )
         dots = tf.einsum("b h i d, b h j d -> b h i j", q, k) * self.scale
 
         seq = tf.range(n)
