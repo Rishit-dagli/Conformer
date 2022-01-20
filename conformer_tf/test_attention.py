@@ -1,8 +1,9 @@
+import random
+
 import numpy as np
+import pytest
 import tensorflow as tf
 from parameterized import parameterized
-import random
-import pytest
 
 from .attention import Attention
 
@@ -11,8 +12,10 @@ class AttentionTest(tf.test.TestCase):
     def setUp(self):
         super(AttentionTest, self).setUp()
 
-        self.attention = Attention(dim=512, heads=8, dim_head=64, dropout=0.1, max_pos_emb=512)
-    
+        self.attention = Attention(
+            dim=512, heads=8, dim_head=64, dropout=0.1, max_pos_emb=512
+        )
+
     def generate_param_list():
         param_list = []
         for n in range(10):
@@ -29,6 +32,7 @@ class AttentionTest(tf.test.TestCase):
 
         self.assertEqual(tf.rank(output), 3)
         self.assertShapeEqual(np.zeros(output_shape), output)
+
 
 if __name__ == "__main__":
     tf.test.main()
