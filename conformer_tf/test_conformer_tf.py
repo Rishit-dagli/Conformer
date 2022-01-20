@@ -1,12 +1,11 @@
+import random
+
 import numpy as np
+import pytest
 import tensorflow as tf
 from parameterized import parameterized
-import random
-import pytest
 
-from .conformer_tf import ConformerBlock
-from .conformer_tf import ConformerConvModule
-
+from .conformer_tf import ConformerBlock, ConformerConvModule
 
 
 class ConformerBlockTest(tf.test.TestCase):
@@ -14,17 +13,17 @@ class ConformerBlockTest(tf.test.TestCase):
         super(ConformerBlockTest, self).setUp()
 
         self.model = ConformerBlock(
-            dim = 512,
-            dim_head = 64,
-            heads = 8,
-            ff_mult = 4,
-            conv_expansion_factor = 2,
-            conv_kernel_size = 31,
-            attn_dropout = 0.,
-            ff_dropout = 0.,
-            conv_dropout = 0.
+            dim=512,
+            dim_head=64,
+            heads=8,
+            ff_mult=4,
+            conv_expansion_factor=2,
+            conv_kernel_size=31,
+            attn_dropout=0.0,
+            ff_dropout=0.0,
+            conv_dropout=0.0,
         )
-    
+
     def generate_param_list():
         param_list = []
         for a in range(3):
@@ -41,18 +40,19 @@ class ConformerBlockTest(tf.test.TestCase):
         self.assertEqual(tf.rank(output), 3)
         self.assertShapeEqual(np.zeros(output_shape), output)
 
+
 class ConformerConvModuleTest(tf.test.TestCase):
     def setUp(self):
         super(ConformerConvModuleTest, self).setUp()
 
         self.layer = ConformerConvModule(
-            dim = 512,
-            causal = False,
-            expansion_factor = 2,
-            kernel_size = 31,
-            dropout = 0.1,
+            dim=512,
+            causal=False,
+            expansion_factor=2,
+            kernel_size=31,
+            dropout=0.1,
         )
-    
+
     def generate_param_list():
         param_list = []
         for a in range(3):
@@ -68,6 +68,7 @@ class ConformerConvModuleTest(tf.test.TestCase):
 
         self.assertEqual(tf.rank(output), 3)
         self.assertShapeEqual(np.zeros(output_shape), output)
+
 
 if __name__ == "__main__":
     tf.test.main()
