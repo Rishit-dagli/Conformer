@@ -1,3 +1,11 @@
+import einops
+import tensorflow as tf
+from einops import rearrange
+from einops.layers.tensorflow import Rearrange
+
+from .attention import Attention
+
+
 class Swish(tf.keras.layers.Layer):
     def __init__(self, **kwargs):
         super(Swish, self).__init__(**kwargs)
