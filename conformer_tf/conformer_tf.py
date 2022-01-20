@@ -1,11 +1,3 @@
-import einops
-import tensorflow as tf
-from einops import rearrange
-from einops.layers.tensorflow import Rearrange
-
-from .attention import Attention
-
-
 class Swish(tf.keras.layers.Layer):
     def __init__(self, **kwargs):
         super(Swish, self).__init__(**kwargs)
@@ -68,7 +60,7 @@ class FeedForward(tf.keras.layers.Layer):
         super(FeedForward, self).__init__(**kwargs)
         self.net = tf.keras.Sequential(
             [
-                tf.keras.layers.Dense(dim * mult, activation=Swish(), input_dim=dim),
+                tf.keras.layers.Dense(dim * mult, activation=Swish()),
                 tf.keras.layers.Dropout(dropout),
                 tf.keras.layers.Dense(dim, input_dim=dim * mult),
                 tf.keras.layers.Dropout(dropout),
@@ -162,7 +154,7 @@ class ConformerBlock(tf.keras.layers.Layer):
 
         self.post_norm = tf.keras.layers.LayerNormalization(axis=-1)
 
-    def forward(self, inputs, mask=None):
+    def call(self, inputs, mask=None):
         inputs = self.ff1(inputs) + inputs
         inputs = self.attn(inputs, mask=mask) + inputs
         inputs = self.conv(inputs) + inputs
