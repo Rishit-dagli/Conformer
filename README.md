@@ -36,6 +36,12 @@ cd Conformer
 pip install -e .[dev]
 ```
 
+To run rank and shape tests run the following:
+
+```sh
+pytest --verbose
+```
+
 ## Usage
 
 In this section, I show a minimal example of creating a Convolutional Module, one of the main contributions of the paper and a Conformer block as well.
